@@ -1,6 +1,8 @@
-package rentabilidade.rentabilidademensal.service;
+package rentabilidade.rentabilidademensal.services;
 import org.springframework.stereotype.Service;
 import rentabilidade.rentabilidademensal.utils.SortHashMap;
+import rentabilidade.rentabilidademensal.utils.WriteTxtFile;
+
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,8 +15,7 @@ public class RentabilidadeMensalService {
                 this.getClass().getResourceAsStream("/rentabilidades.txt"));
 
         try (BufferedReader br = new BufferedReader(file)) {
-            HashMap<String, Float> monthPerformanceList = new HashMap<String, Float>();
-            //StringBuilder sb = new StringBuilder();
+            HashMap<String, Float> monthPerformanceList = new HashMap<>();
             SimpleDateFormat dateReaderFormat = new SimpleDateFormat("dd/MM/yyyy");
             SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM", new Locale("pt","BR"));
             ArrayList<String> errorList = new ArrayList<String>();
@@ -24,12 +25,9 @@ public class RentabilidadeMensalService {
 
             while (line != null) {
                 String[] values = line.split(";");
-                //sb.append(line);
-                //sb.append(System.lineSeparator());
                 try {
                     Date date = dateReaderFormat.parse(values[0]);
                     String month = monthFormat.format(date).toLowerCase();
-                    //System.out.println(monthFormat.dateReaderFormat(data));
                     Float performance = Float.valueOf(values[1]);
                     monthPerformanceList.put(month, monthPerformanceList.getOrDefault(month, 0f) + performance);
                 } catch (ParseException pe) {
@@ -37,11 +35,13 @@ public class RentabilidadeMensalService {
                 }
                 line = br.readLine();
             }
-            SortHashMap hashSorter = new SortHashMap();
-            HashMap<String, Float> sortedMonthPerformanceList = hashSorter.sortByValueDesc(monthPerformanceList);
 
-            System.out.println(sortedMonthPerformanceList.size());
-            System.out.println(sortedMonthPerformanceList);
+            var hashMapSorter = new SortHashMap();
+            HashMap<String, Float> sortedMonthPerformanceList = hashMapSorter.sortByValueDesc(monthPerformanceList);
+
+            var txtWriter = new WriteTxtFile();
+            txtWriter.HashmapToTxtFile(sortedMonthPerformanceList, System.getProperty("user.dir")+"/..");
+
             System.out.println(errorList);
         } catch (IOException e) {
             throw new RuntimeException(e);

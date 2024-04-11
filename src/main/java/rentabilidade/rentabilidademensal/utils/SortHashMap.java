@@ -2,8 +2,12 @@ package rentabilidade.rentabilidademensal.utils;
 
 import java.util.*;
 
-public final class SortHashMap {
-    public static HashMap<String, Float> sortByValueDesc(HashMap<String, Float> hm)
+interface ISortHashMap{
+    public HashMap<String, Float> sortByValueDesc(HashMap<String, Float> hm);
+}
+
+public final class SortHashMap implements ISortHashMap {
+    public HashMap<String, Float> sortByValueDesc(HashMap<String, Float> hm)
     {
         // Create a list from elements of HashMap
         List<Map.Entry<String, Float> > list =
