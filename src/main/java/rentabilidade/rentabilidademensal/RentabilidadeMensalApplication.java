@@ -9,8 +9,12 @@ import rentabilidade.rentabilidademensal.services.RentabilidadeMensalService;
 @SpringBootApplication
 public class RentabilidadeMensalApplication implements CommandLineRunner {
 
+    private final RentabilidadeMensalService rentabilidadeMensalService;
+
     @Autowired
-    private RentabilidadeMensalService rentabilidadeMensalService;
+    public RentabilidadeMensalApplication(RentabilidadeMensalService rentabilidadeMensalService) {
+        this.rentabilidadeMensalService = rentabilidadeMensalService;
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(RentabilidadeMensalApplication.class, args);

@@ -18,31 +18,28 @@ public class RentabilidadeMensalService {
     public void calcularRentabilidadeMensal(String[] args) throws IOException {
 
         logger.info("Calculando Rentabilidade Mensal");
-        var file = new InputStreamReader(
-                this.getClass().getResourceAsStream("/rentabilidades.txt"));
-
-        try (BufferedReader reader = new BufferedReader(file)) {
+        try (InputStreamReader file = new InputStreamReader(this.getClass().getResourceAsStream("/rentabilidades.txt"));
+             BufferedReader reader = new BufferedReader(file)) {
             HashMap<String, Float> monthPerformanceList = new HashMap<>();
             SimpleDateFormat dateReaderFormat = new SimpleDateFormat("dd/MM/yyyy");
             SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM", new Locale("pt","BR"));
-            ArrayList<String> errorList = new ArrayList<String>();
+            List<String> errorList = processLines(reader, monthPerformanceList);
 
-            reader.readLine(); // pulando a primeira linha (cabeçalho)
-            String line = reader.readLine();
-
-            while (line != null) {
-                String[] values = line.split(";");
-                try {
-                    Date date = dateReaderFormat.parse(values[0]);
-                    String month = monthFormat.format(date).toLowerCase();
-                    Float performance = Float.valueOf(values[1]);
-                    monthPerformanceList.put(month, monthPerformanceList.getOrDefault(month, 0f) + performance);
-                } catch (ParseException pe) {
-                    errorList.add(pe.getMessage());
-                }
-                line = reader.readLine();
-            }
-            reader.close();
+//            reader.readLine(); // pulando a primeira linha (cabeçalho)
+//            String line = reader.readLine();
+//
+//            while (line != null) {
+//                String[] values = line.split(";");
+//                try {
+//                    Date date = dateReaderFormat.parse(values[0]);
+//                    String month = monthFormat.format(date).toLowerCase();
+//                    Float performance = Float.valueOf(values[1]);
+//                    monthPerformanceList.put(month, monthPerformanceList.getOrDefault(month, 0f) + performance);
+//                } catch (ParseException pe) {
+//                    errorList.add(pe.getMessage());
+//                }
+//                line = reader.readLine();
+//            }
 
             var hashMapSorter = new SortHashMap();
             HashMap<String, Float> sortedMonthPerformanceList = hashMapSorter.sortByValueDesc(monthPerformanceList);
@@ -54,9 +51,30 @@ public class RentabilidadeMensalService {
                 logger.error(errorList);
             }
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            logger.error("Falha ao processar o arquivo: {}",e.getMessage());
             throw new RuntimeException(e);
         }
         logger.info("Cálculo de Rentabilidade Mensal finalizado");
+    }
+
+    private List<String> processLines(BufferedReader reader, Map<String, Float> monthPerformanceList) throws IOException {
+        SimpleDateFormat dateReaderFormat = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM", new Locale("pt", "BR"));
+        List<String> errorList = new ArrayList<>();
+
+        reader.readLine(); // Pulando a primeira linha (cabeçalho)
+        String line;
+        while ((line = reader.readLine()) != null) {
+            try {
+                String[] values = line.split(";");
+                Date date = dateReaderFormat.parse(values[0]);
+                String month = monthFormat.format(date).toLowerCase();
+                Float performance = Float.valueOf(values[1]);
+                monthPerformanceList.put(month, monthPerformanceList.getOrDefault(month, 0f) + performance);
+            } catch (ParseException pe) {
+                errorList.add("Erro ao ler a linha: " + line + "; Error: " + pe.getMessage());
+            }
+        }
+        return errorList;
     }
 }
