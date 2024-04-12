@@ -1,5 +1,8 @@
 package rentabilidade.rentabilidademensal.utils;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -12,35 +15,33 @@ interface IWriteTxtFile {
 }
 
 public class WriteTxtFile implements IWriteTxtFile {
+    private static final Logger logger = LogManager.getLogger("rentabilidade");
+
     public void HashmapToTxtFile(HashMap<String, Float> map, String filePath) {
         File file = new File(filePath);
-        BufferedWriter bf = null;
+        BufferedWriter writer = null;
 
         try {
+            writer = new BufferedWriter(new FileWriter(file+"/saida.txt"));
 
-            // create new BufferedWriter for the output file
-            bf = new BufferedWriter(new FileWriter(file+"/saida.txt"));
-
-            // iterate map entries
             for (Map.Entry<String, Float> entry :
                     map.entrySet()) {
 
-                // put key and value separated by a colon
-                bf.write(entry.getKey() + ":"
+                // Separando chave e valor por ": "
+                writer.write(entry.getKey() + ": "
                         + entry.getValue());
 
-                // new line
-                bf.newLine();
+                writer.newLine();
             }
 
-            bf.flush();
+            writer.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Erro ao escrever arquivo txt", e);
         } finally {
             try {
-                bf.close();
+                writer.close();
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("Erro ao fechar writer", e);
             }
         }
     }

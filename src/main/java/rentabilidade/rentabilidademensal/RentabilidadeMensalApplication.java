@@ -18,6 +18,6 @@ public class RentabilidadeMensalApplication implements CommandLineRunner {
 
     @Override
     public void run(String... arg0) throws Exception {
-        rentabilidadeMensalService.calcular(arg0);
+        rentabilidadeMensalService.calcularRentabilidadeMensal(arg0);
     }
 }
