@@ -20,26 +20,12 @@ public class RentabilidadeMensalService {
         logger.info("Calculando Rentabilidade Mensal");
         try (InputStreamReader file = new InputStreamReader(this.getClass().getResourceAsStream("/rentabilidades.txt"));
              BufferedReader reader = new BufferedReader(file)) {
+
             HashMap<String, Float> monthPerformanceList = new HashMap<>();
             SimpleDateFormat dateReaderFormat = new SimpleDateFormat("dd/MM/yyyy");
             SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM", new Locale("pt","BR"));
-            List<String> errorList = processLines(reader, monthPerformanceList);
 
-//            reader.readLine(); // pulando a primeira linha (cabeçalho)
-//            String line = reader.readLine();
-//
-//            while (line != null) {
-//                String[] values = line.split(";");
-//                try {
-//                    Date date = dateReaderFormat.parse(values[0]);
-//                    String month = monthFormat.format(date).toLowerCase();
-//                    Float performance = Float.valueOf(values[1]);
-//                    monthPerformanceList.put(month, monthPerformanceList.getOrDefault(month, 0f) + performance);
-//                } catch (ParseException pe) {
-//                    errorList.add(pe.getMessage());
-//                }
-//                line = reader.readLine();
-//            }
+            List<String> errorList = processLines(reader, monthPerformanceList);
 
             var hashMapSorter = new SortHashMap();
             HashMap<String, Float> sortedMonthPerformanceList = hashMapSorter.sortByValueDesc(monthPerformanceList);
