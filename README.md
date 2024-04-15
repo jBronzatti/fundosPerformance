@@ -23,8 +23,7 @@ Siga estes passos para executar o projeto localmente:
 
 1. Clone o repositório para sua máquina local.
 2. Navegue até a pasta do projeto via terminal.
-3. Execute o comando `mvn clean install` para construir o projeto. Isso baixará todas as dependências necessárias e compilará o projeto.
-4. Após a construção, execute o comando `java -jar target/RentabilidadeMensal-0.0.1-SNAPSHOT.jar` para iniciar a aplicação.
+3. Abra o projeto em qualquer IDE de sua escolha e rode o projeto.
 
 ## Arquivos de Entrada e Saída
 
