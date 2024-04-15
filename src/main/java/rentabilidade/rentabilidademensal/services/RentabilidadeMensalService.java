@@ -22,8 +22,6 @@ public class RentabilidadeMensalService {
              BufferedReader reader = new BufferedReader(file)) {
 
             HashMap<String, Float> monthPerformanceList = new HashMap<>();
-            SimpleDateFormat dateReaderFormat = new SimpleDateFormat("dd/MM/yyyy");
-            SimpleDateFormat monthFormat = new SimpleDateFormat("MMMM", new Locale("pt","BR"));
 
             List<String> errorList = processLines(reader, monthPerformanceList);
 
